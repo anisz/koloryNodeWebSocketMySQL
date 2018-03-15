@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>anisz Aplikacja Node</title>
+    <!-- jQuery library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Bootstrap - Latest compiled and minified CSS
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+    <!-- Bootstrap - Latest compiled JavaScript
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+
+        var ratio = 25;
+        var socket = io.connect();
+        socket.on('time', function (time) {
+            $("#time").html(time);
+        });
+        socket.on('data', function (dane) {
+            $("#data").html(dane);
+        });
+        socket.on('green', function (green) {
+            $("#greenAvg").html(green);
+            var greenhight = green * ratio;
+            $("#rs1").attr("height", greenhight);
+            $("#rr1").attr("height", greenhight);
+        });
+        socket.on('purple', function (purple) {
+            $("#purpleAvg").html(purple);
+            var purplehight = purple * ratio;
+            $("#rs2").attr("height", purplehight);
+            $("#rr2").attr("height", purplehight);
+        });
+        socket.on('red', function (red) {
+            $("#redAvg").html(red);
+            var redhight = red * ratio;
+            $("#rs3").attr("height", redhight);
+            $("#rr3").attr("height", redhight);
+        });
+        socket.on('blue', function (blue) {
+            $("#blueAvg").html(blue);
+            var bluehight = blue * ratio;
+            $("#rs5").attr("height", bluehight);
+            $("#rr5").attr("height", bluehight);
+        });
+        socket.on('yellow', function (yellow) {
+            $("#yelloAvg").html(yellow);
+            var yellowhight = yellow * ratio;
+            $("#rs4").attr("height", yellowhight);
+            $("#rr4").attr("height", yellowhight);
+        });
+
+    </script>
+    <style>
+        svg {
+            border: 2px solid #3C3C3C;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="container">
+                <div class="page-header"> Zapraszam do zapoznania się z możliwościami Node.js... by anisz <span style='margin-left:26em'>Aktualny czas serwera: <b><font color="#FF8800"><span id="time"></span></font></b></span></div>
+                <div class="jumbotron">
+                    <h1>
+                        <p><img src="icons/nodejssmall.png" /><img src="icons/rsz_socket.png" /><img src="icons/rsz_mysql.png" /><img src="icons/rsz_bootstrap.png" /><img src="icons/rsz_jquery.png" /><img src="icons/rsz_js.png" /></p>
+                        <font color="#79B85F">Node.js & WebSocket by anisz</font>
+                    </h1>
+                    <p> Niniejsza strona, wykorzystuje technologię Node.js, korzysta z bazy danych mySQL oraz rozwiązania WebSocket.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 panel panel-default">
+            <div class="panel-heading">
+                <font color="#89BD5B">Średnia wyliczona na podstawie następujących danych:</font>
+            </div>
+            <div class="panel-body">
+                <form method="POST" action="/deleteAll">
+                    <button style="float: right;" type="submit" class="btn btn-danger">Wyczyść bazę danych</button>
+                </form>
+                <p id="data">Tabela  </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 panel panel-default">
+            <div class="panel-heading"><font color="#89BD5B">Wprowadź dane</font></div>
+            <div class="panel-body">
+                <p>Wprowadź dane do wyliczenia średnich. Podaj <b><font color="#FF8800">cyfry</font></b> w zakresie <font color="#FF8800"><b>0-9 </b></font></p>
+                <form method="POST" action="/">
+                    <div class="input-group">
+                        <span class="input-group-addon">Green</span>
+                        <input id="green" type="number" min="0" max="9" class="form-control" name="green" placeholder="Zielony" required>
+                        <span class="input-group-addon">Purple</span>
+                        <input id="purple" type="number" min="0" max="9" class="form-control" name="purple" placeholder="Fioletowy" required>
+                        <span class="input-group-addon has-success">Red</span>
+                        <input id="red" type="number" min="0" max="9" class="form-control" name="red" placeholder="Czerwony" required>
+                        <span class="input-group-addon">Blue</span>
+                        <input id="blue" type="number" min="0" max="9" class="form-control" name="blue" placeholder="Niebieski" required>
+                        <span class="input-group-addon">Orange</span>
+                        <input id="yellow" type="number" min="0" max="9" class="form-control" name="yellow" placeholder="Pomarańcz" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Dodaj</button>
+                </form>
+
+                <div><p></p></div>
+
+                <div class="col-md-5 panel panel-default">
+                    <div class="panel-heading"><font color="#89BD5B">Wykres</font></div>
+                    <div class="panel-body">
+                        <svg id="rs1" width="50" height="110">
+                            <rect id="rr1" width="49" height="109" style="fill:rgb(0, 153, 0);stroke-width:1;stroke:rgb(0,0,0)" />
+                        </svg>
+                        <svg id="rs2" width="50" height="110">
+                            <rect id="rr2" width="49" height="109" style="fill:rgb(153, 0, 153);stroke-width:1;stroke:rgb(0,0,0)" />
+                        </svg>
+                        <svg id="rs3" width="50" height="110">
+                            <rect id="rr3" width="49" height="109" style="fill:rgb(254, 6, 6);stroke-width:1;stroke:rgb(0,0,0)" />
+                        </svg>
+                        <svg id="rs5" width="50" height="110">
+                            <rect id="rr5" width="49" height="109" style="fill:rgb(0, 102, 255);stroke-width:1;stroke:rgb(0,0,0)" />
+                        </svg>
+                        <svg id="rs4" width="50" height="110">
+                            <rect id="rr4" width="49" height="109" style="fill:rgb(255, 106, 0);stroke-width:1;stroke:rgb(0,0,0)" />
+                        </svg>
+                    </div>
+
+                </div>
+                <div class="col-md-7 panel panel-default">
+                    <div class="panel-heading"><font color="#89BD5B">Średnie</font></div>
+                    <div class="panel-body">
+                        <p>
+                            <ul>
+                                <li>Średnia <font color="green"><b>zielona</b></font> wynosi: <font color="#CC0000" size="5"><b id="greenAvg"></b></font></li>
+                                <li>Średnia <font color="#990099"><b>fioletowa</b></font> wynosi: <font color="#CC0000" size="5"><b id="purpleAvg"></b></font></li>
+                                <li>Średnia <font color="#FE0606"><b>czerwona</b></font> wynosi: <font color="#CC0000" size="5"><b id="redAvg"></b></font></li>
+                                <li>Średnia <font color="#0066FF"><b>niebieska</b></font> wynosi: <font color="#CC0000" size="5"><b id="blueAvg"></b></font></li>
+                                <li>Średnia <font color="#FF6A00"><b>pomarańczowa</b></font> wynosi: <font color="#CC0000" size="5"><b id="yelloAvg"></b></font></li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
