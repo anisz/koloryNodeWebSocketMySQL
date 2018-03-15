@@ -10,5 +10,5 @@ Node.js, MySQL
 
 # Uruchomienie aplikacji
 Założenie bazy MySQL:	database: 'kolory', user: 'root', password: 'root'
-Uruchamianie:	Nawigacja do głównego folderu, polecenie: node kolory_server.js
+Uruchamianie:	Nawigacja do głównego folderu, polecenia: npm install, node kolory_server.js
 Efekt:	http://127.0.0.1:3000/
